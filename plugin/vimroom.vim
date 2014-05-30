@@ -147,9 +147,6 @@ function! <SID>VimroomToggle()
     else
         if s:is_screen_wide_enough()
             let s:active = 1
-            if s:save_laststatus != ""
-                setlocal laststatus=0
-            endif
             if g:vimroom_min_sidebar_width
                 let sidebar_size = s:sidebar_size()
                 call s:OpenSidebar(sidebar_size, "H")
@@ -160,18 +157,8 @@ function! <SID>VimroomToggle()
                 call s:OpenSidebar(sidebar_size, "K")
                 call s:OpenSidebar(sidebar_size, "J")
             endif
-            set wrap
-            set linebreak
-            if g:vimroom_clear_line_numbers
-                set nonumber
-                silent! set norelativenumber
-            endif
-            if s:save_textwidth != ""
-                exec( "set textwidth=".g:vimroom_width )
-            endif
-            if s:save_scrolloff != ""
-                exec( "set scrolloff=".g:vimroom_scrolloff )
-            endif
+            call s:SetLocalOptions()
+            call s:SetGlobalOptions()
 
             if g:vimroom_navigation_keys
                 try
@@ -213,6 +200,29 @@ function! s:OpenSidebar(size, direction)
     silent! setlocal nonumber
     silent! setlocal norelativenumber
     wincmd p
+endfunction
+
+
+function! s:SetLocalOptions()
+    silent! setlocal wrap
+    silent! setlocal linebreak
+    if g:vimroom_clear_line_numbers
+        silent! setlocal nonumber
+        silent! setlocal norelativenumber
+    endif
+    if s:save_textwidth != ""
+        execute "silent! setlocal textwidth=" . g:vimroom_width
+    endif
+endfunction
+
+
+function! s:SetGlobalOptions()
+    if s:save_scrolloff != ""
+        execute "silent! set scrolloff=" . g:vimroom_scrolloff
+    endif
+    if s:save_laststatus != ""
+        silent! set laststatus=0
+    endif
 endfunction
 
 noremap <silent> <Plug>VimroomToggle    :call <SID>VimroomToggle()<CR>
