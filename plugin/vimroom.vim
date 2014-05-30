@@ -147,16 +147,7 @@ function! <SID>VimroomToggle()
     else
         if s:is_screen_wide_enough()
             let s:active = 1
-            if g:vimroom_min_sidebar_width
-                let sidebar_size = s:sidebar_size()
-                call s:OpenSidebar(sidebar_size, "H")
-                call s:OpenSidebar(sidebar_size, "L")
-            endif
-            if g:vimroom_sidebar_height
-                let sidebar_size = g:vimroom_sidebar_height
-                call s:OpenSidebar(sidebar_size, "K")
-                call s:OpenSidebar(sidebar_size, "J")
-            endif
+            call s:CenterScreen()
             call s:SetLocalOptions()
             call s:SetGlobalOptions()
 
@@ -188,6 +179,20 @@ function! <SID>VimroomToggle()
             set t_mr=""
             set fillchars+=vert:\ 
         endif
+    endif
+endfunction
+
+
+function! s:CenterScreen()
+    if g:vimroom_min_sidebar_width
+        let sidebar_size = s:sidebar_size()
+        call s:OpenSidebar(sidebar_size, "H")
+        call s:OpenSidebar(sidebar_size, "L")
+    endif
+    if g:vimroom_sidebar_height
+        let sidebar_size = g:vimroom_sidebar_height
+        call s:OpenSidebar(sidebar_size, "K")
+        call s:OpenSidebar(sidebar_size, "J")
     endif
 endfunction
 
