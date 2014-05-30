@@ -148,19 +148,16 @@ function! <SID>VimroomToggle()
         if s:is_screen_wide_enough()
             let s:active = 1
             let s:sidebar = s:sidebar_size()
-            " Turn off status bar
             if s:save_laststatus != ""
                 setlocal laststatus=0
             endif
             if g:vimroom_min_sidebar_width
-                " Create the left sidebar
                 exec( "silent leftabove " . s:sidebar . "vsplit new" )
                 setlocal noma
                 setlocal nocursorline
                 setlocal nonumber
                 silent! setlocal norelativenumber
                 wincmd l
-                " Create the right sidebar
                 exec( "silent rightbelow " . s:sidebar . "vsplit new" )
                 setlocal noma
                 setlocal nocursorline
@@ -169,14 +166,12 @@ function! <SID>VimroomToggle()
                 wincmd h
             endif
             if g:vimroom_sidebar_height
-                " Create the top sidebar
                 exec( "silent leftabove " . g:vimroom_sidebar_height . "split new" )
                 setlocal noma
                 setlocal nocursorline
                 setlocal nonumber
                 silent! setlocal norelativenumber
                 wincmd j
-                " Create the bottom sidebar
                 exec( "silent rightbelow " . g:vimroom_sidebar_height . "split new" )
                 setlocal noma
                 setlocal nocursorline
@@ -184,7 +179,6 @@ function! <SID>VimroomToggle()
                 silent! setlocal norelativenumber
                 wincmd k
             endif
-            " Setup wrapping, line breaking, and push the cursor down
             set wrap
             set linebreak
             if g:vimroom_clear_line_numbers
@@ -198,8 +192,6 @@ function! <SID>VimroomToggle()
                 exec( "set scrolloff=".g:vimroom_scrolloff )
             endif
 
-            " Setup navigation over "display lines", not "logical lines" if
-            " mappings for the navigation keys don't already exist.
             if g:vimroom_navigation_keys
                 try
                     noremap     <unique> <silent> <Up> g<Up>
@@ -213,7 +205,6 @@ function! <SID>VimroomToggle()
                 endtry
             endif
 
-            " Hide distracting visual elements
             if has('gui_running')
                 let l:highlightbgcolor = "guibg=" . g:vimroom_guibackground
                 let l:highlightfgbgcolor = "guifg=" . g:vimroom_guibackground . " " . l:highlightbgcolor
