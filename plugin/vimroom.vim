@@ -150,20 +150,7 @@ function! <SID>VimroomToggle()
             call s:CenterScreen()
             call s:SetLocalOptions()
             call s:SetGlobalOptions()
-
-            if g:vimroom_navigation_keys
-                try
-                    noremap     <unique> <silent> <Up> g<Up>
-                    noremap     <unique> <silent> <Down> g<Down>
-                    noremap     <unique> <silent> k gk
-                    noremap     <unique> <silent> j gj
-                    inoremap    <unique> <silent> <Up> <C-o>g<Up>
-                    inoremap    <unique> <silent> <Down> <C-o>g<Down>
-                catch /E227:/
-                    echo "Navigational key mappings already exist."
-                endtry
-            endif
-
+            call s:SetNavigationMappings()
             if has('gui_running')
                 let l:highlightbgcolor = "guibg=" . g:vimroom_guibackground
                 let l:highlightfgbgcolor = "guifg=" . g:vimroom_guibackground . " " . l:highlightbgcolor
@@ -227,6 +214,18 @@ function! s:SetGlobalOptions()
     endif
     if s:save_laststatus != ""
         silent! set laststatus=0
+    endif
+endfunction
+
+
+function! s:SetNavigationMappings()
+    if g:vimroom_navigation_keys
+        noremap <buffer><silent> k gk
+        noremap <buffer><silent> j gj
+        noremap <buffer><silent> <Up> g<Up>
+        noremap <buffer><silent> <Down> g<Down>
+        inoremap <buffer><silent> <Up> <C-o>g<Up>
+        inoremap <buffer><silent> <Down> <C-o>g<Down>
     endif
 endfunction
 
