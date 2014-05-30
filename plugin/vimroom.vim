@@ -30,14 +30,6 @@ if !exists( "g:vimroom_sidebar_height" )
     let g:vimroom_sidebar_height = 3
 endif
 
-if !exists( "g:vimroom_guibackground" )
-    let g:vimroom_guibackground = "black"
-endif
-
-if !exists( "g:vimroom_ctermbackground" )
-    let g:vimroom_ctermbackground = "bg"
-endif
-
 if !exists( "g:vimroom_scrolloff" )
     let g:vimroom_scrolloff = 999
 endif
@@ -147,89 +139,101 @@ function! <SID>VimroomToggle()
     else
         if s:is_screen_wide_enough()
             let s:active = 1
-            let s:sidebar = s:sidebar_size()
-            " Turn off status bar
-            if s:save_laststatus != ""
-                setlocal laststatus=0
-            endif
-            if g:vimroom_min_sidebar_width
-                " Create the left sidebar
-                exec( "silent leftabove " . s:sidebar . "vsplit new" )
-                setlocal noma
-                setlocal nocursorline
-                setlocal nonumber
-                silent! setlocal norelativenumber
-                wincmd l
-                " Create the right sidebar
-                exec( "silent rightbelow " . s:sidebar . "vsplit new" )
-                setlocal noma
-                setlocal nocursorline
-                setlocal nonumber
-                silent! setlocal norelativenumber
-                wincmd h
-            endif
-            if g:vimroom_sidebar_height
-                " Create the top sidebar
-                exec( "silent leftabove " . g:vimroom_sidebar_height . "split new" )
-                setlocal noma
-                setlocal nocursorline
-                setlocal nonumber
-                silent! setlocal norelativenumber
-                wincmd j
-                " Create the bottom sidebar
-                exec( "silent rightbelow " . g:vimroom_sidebar_height . "split new" )
-                setlocal noma
-                setlocal nocursorline
-                setlocal nonumber
-                silent! setlocal norelativenumber
-                wincmd k
-            endif
-            " Setup wrapping, line breaking, and push the cursor down
-            set wrap
-            set linebreak
-            if g:vimroom_clear_line_numbers
-                set nonumber
-                silent! set norelativenumber
-            endif
-            if s:save_textwidth != ""
-                exec( "set textwidth=".g:vimroom_width )
-            endif
-            if s:save_scrolloff != ""
-                exec( "set scrolloff=".g:vimroom_scrolloff )
-            endif
-
-            " Setup navigation over "display lines", not "logical lines" if
-            " mappings for the navigation keys don't already exist.
-            if g:vimroom_navigation_keys
-                try
-                    noremap     <unique> <silent> <Up> g<Up>
-                    noremap     <unique> <silent> <Down> g<Down>
-                    noremap     <unique> <silent> k gk
-                    noremap     <unique> <silent> j gj
-                    inoremap    <unique> <silent> <Up> <C-o>g<Up>
-                    inoremap    <unique> <silent> <Down> <C-o>g<Down>
-                catch /E227:/
-                    echo "Navigational key mappings already exist."
-                endtry
-            endif
-
-            " Hide distracting visual elements
+            call s:CenterScreen()
+            call s:SetLocalOptions()
+            call s:SetGlobalOptions()
+            call s:SetNavigationMappings()
             if has('gui_running')
-                let l:highlightbgcolor = "guibg=" . g:vimroom_guibackground
-                let l:highlightfgbgcolor = "guifg=" . g:vimroom_guibackground . " " . l:highlightbgcolor
+                let bg = s:GetBackgroundColor("guibg")
+                let hi_bg_color = "guibg=" . bg
+                let hi_fg_color = "guifg=" . bg
             else
-                let l:highlightbgcolor = "ctermbg=" . g:vimroom_ctermbackground
-                let l:highlightfgbgcolor = "ctermfg=" . g:vimroom_ctermbackground . " " . l:highlightbgcolor
+                let bg = s:GetBackgroundColor("ctermbg")
+                let hi_bg_color = "ctermbg=" . bg
+                let hi_fg_color = "ctermfg=" . bg
             endif
-            exec( "hi Normal " . l:highlightbgcolor )
-            exec( "hi VertSplit " . l:highlightfgbgcolor )
-            exec( "hi NonText " . l:highlightfgbgcolor )
-            exec( "hi StatusLine " . l:highlightfgbgcolor )
-            exec( "hi StatusLineNC " . l:highlightfgbgcolor )
-            set t_mr=""
-            set fillchars+=vert:\ 
+            execute "hi Normal " . hi_bg_color
+            execute "hi VertSplit " . hi_fg_color . " " . hi_bg_color
+            execute "hi NonText " . hi_fg_color . " " . hi_bg_color
+            execute "hi StatusLine " . hi_fg_color . " " . hi_bg_color
+            execute "hi StatusLineNC " . hi_fg_color . " " . hi_bg_color
         endif
     endif
+endfunction
+
+
+function! s:CenterScreen()
+    if g:vimroom_min_sidebar_width
+        let sidebar_size = s:sidebar_size()
+        call s:OpenSidebar(sidebar_size, "H")
+        call s:OpenSidebar(sidebar_size, "L")
+    endif
+    if g:vimroom_sidebar_height
+        let sidebar_size = g:vimroom_sidebar_height
+        call s:OpenSidebar(sidebar_size, "K")
+        call s:OpenSidebar(sidebar_size, "J")
+    endif
+endfunction
+
+
+function! s:OpenSidebar(size, direction)
+    execute "silent leftabove " . a:size . "split new"
+    execute "wincmd " . toupper(a:direction)
+    silent! setlocal nomodifiable
+    silent! setlocal nocursorline
+    silent! setlocal nonumber
+    silent! setlocal norelativenumber
+    wincmd p
+endfunction
+
+
+function! s:SetLocalOptions()
+    silent! setlocal wrap
+    silent! setlocal linebreak
+    if g:vimroom_clear_line_numbers
+        silent! setlocal nonumber
+        silent! setlocal norelativenumber
+    endif
+    if s:save_textwidth != ""
+        execute "silent! setlocal textwidth=" . g:vimroom_width
+    endif
+endfunction
+
+
+function! s:SetGlobalOptions()
+    set t_mr
+    set fillchars+=vert:\ 
+    if s:save_scrolloff != ""
+        execute "silent! set scrolloff=" . g:vimroom_scrolloff
+    endif
+    if s:save_laststatus != ""
+        silent! set laststatus=0
+    endif
+endfunction
+
+
+function! s:SetNavigationMappings()
+    if g:vimroom_navigation_keys
+        noremap <buffer><silent> k gk
+        noremap <buffer><silent> j gj
+        noremap <buffer><silent> <Up> g<Up>
+        noremap <buffer><silent> <Down> g<Down>
+        inoremap <buffer><silent> <Up> <C-o>g<Up>
+        inoremap <buffer><silent> <Down> <C-o>g<Down>
+    endif
+endfunction
+
+
+function! s:GetBackgroundColor(term)
+    let oldz = @z
+    redir @z
+    highlight Normal
+    redir END
+
+    let match_re = '\v' . a:term . '\=\zs\S+'
+    let bg = matchstr(@z, match_re)
+    let @z = oldz
+    return bg
 endfunction
 
 noremap <silent> <Plug>VimroomToggle    :call <SID>VimroomToggle()<CR>
