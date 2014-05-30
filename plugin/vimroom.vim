@@ -30,14 +30,6 @@ if !exists( "g:vimroom_sidebar_height" )
     let g:vimroom_sidebar_height = 3
 endif
 
-if !exists( "g:vimroom_guibackground" )
-    let g:vimroom_guibackground = "black"
-endif
-
-if !exists( "g:vimroom_ctermbackground" )
-    let g:vimroom_ctermbackground = "bg"
-endif
-
 if !exists( "g:vimroom_scrolloff" )
     let g:vimroom_scrolloff = 999
 endif
@@ -152,18 +144,20 @@ function! <SID>VimroomToggle()
             call s:SetGlobalOptions()
             call s:SetNavigationMappings()
             if has('gui_running')
-                let l:highlightbgcolor = "guibg=" . g:vimroom_guibackground
-                let l:highlightfgbgcolor = "guifg=" . g:vimroom_guibackground . " " . l:highlightbgcolor
+                let bg = s:GetBackgroundColor("guibg")
+                let hi_bg_color = "guibg=" . bg
+                let hi_fg_color = "guifg=" . bg
             else
-                let l:highlightbgcolor = "ctermbg=" . g:vimroom_ctermbackground
-                let l:highlightfgbgcolor = "ctermfg=" . g:vimroom_ctermbackground . " " . l:highlightbgcolor
+                let bg = s:GetBackgroundColor("ctermbg")
+                let hi_bg_color = "ctermbg=" . bg
+                let hi_fg_color = "ctermfg=" . bg
             endif
-            exec( "hi Normal " . l:highlightbgcolor )
-            exec( "hi VertSplit " . l:highlightfgbgcolor )
-            exec( "hi NonText " . l:highlightfgbgcolor )
-            exec( "hi StatusLine " . l:highlightfgbgcolor )
-            exec( "hi StatusLineNC " . l:highlightfgbgcolor )
-            set t_mr=""
+            execute "hi Normal " . hi_bg_color
+            execute "hi VertSplit " . hi_fg_color . " " . hi_bg_color
+            execute "hi NonText " . hi_fg_color . " " . hi_bg_color
+            execute "hi StatusLine " . hi_fg_color . " " . hi_bg_color
+            execute "hi StatusLineNC " . hi_fg_color . " " . hi_bg_color
+            set t_mr
             set fillchars+=vert:\ 
         endif
     endif
@@ -227,6 +221,19 @@ function! s:SetNavigationMappings()
         inoremap <buffer><silent> <Up> <C-o>g<Up>
         inoremap <buffer><silent> <Down> <C-o>g<Down>
     endif
+endfunction
+
+
+function! s:GetBackgroundColor(term)
+    let oldz = @z
+    redir @z
+    highlight Normal
+    redir END
+
+    let match_re = '\v' . a:term . '\=\zs\S+'
+    let bg = matchstr(@z, match_re)
+    let @z = oldz
+    return bg
 endfunction
 
 noremap <silent> <Plug>VimroomToggle    :call <SID>VimroomToggle()<CR>
