@@ -147,37 +147,18 @@ function! <SID>VimroomToggle()
     else
         if s:is_screen_wide_enough()
             let s:active = 1
-            let s:sidebar = s:sidebar_size()
             if s:save_laststatus != ""
                 setlocal laststatus=0
             endif
             if g:vimroom_min_sidebar_width
-                exec( "silent leftabove " . s:sidebar . "vsplit new" )
-                setlocal noma
-                setlocal nocursorline
-                setlocal nonumber
-                silent! setlocal norelativenumber
-                wincmd l
-                exec( "silent rightbelow " . s:sidebar . "vsplit new" )
-                setlocal noma
-                setlocal nocursorline
-                setlocal nonumber
-                silent! setlocal norelativenumber
-                wincmd h
+                let sidebar_size = s:sidebar_size()
+                call s:OpenSidebar(sidebar_size, "H")
+                call s:OpenSidebar(sidebar_size, "L")
             endif
             if g:vimroom_sidebar_height
-                exec( "silent leftabove " . g:vimroom_sidebar_height . "split new" )
-                setlocal noma
-                setlocal nocursorline
-                setlocal nonumber
-                silent! setlocal norelativenumber
-                wincmd j
-                exec( "silent rightbelow " . g:vimroom_sidebar_height . "split new" )
-                setlocal noma
-                setlocal nocursorline
-                setlocal nonumber
-                silent! setlocal norelativenumber
-                wincmd k
+                let sidebar_size = g:vimroom_sidebar_height
+                call s:OpenSidebar(sidebar_size, "K")
+                call s:OpenSidebar(sidebar_size, "J")
             endif
             set wrap
             set linebreak
@@ -221,6 +202,17 @@ function! <SID>VimroomToggle()
             set fillchars+=vert:\ 
         endif
     endif
+endfunction
+
+
+function! s:OpenSidebar(size, direction)
+    execute "silent leftabove " . a:size . "split new"
+    execute "wincmd " . toupper(a:direction)
+    silent! setlocal nomodifiable
+    silent! setlocal nocursorline
+    silent! setlocal nonumber
+    silent! setlocal norelativenumber
+    wincmd p
 endfunction
 
 noremap <silent> <Plug>VimroomToggle    :call <SID>VimroomToggle()<CR>
