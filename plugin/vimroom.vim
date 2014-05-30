@@ -157,8 +157,6 @@ function! <SID>VimroomToggle()
             execute "hi NonText " . hi_fg_color . " " . hi_bg_color
             execute "hi StatusLine " . hi_fg_color . " " . hi_bg_color
             execute "hi StatusLineNC " . hi_fg_color . " " . hi_bg_color
-            set t_mr
-            set fillchars+=vert:\ 
         endif
     endif
 endfunction
@@ -203,6 +201,8 @@ endfunction
 
 
 function! s:SetGlobalOptions()
+    set t_mr
+    set fillchars+=vert:\ 
     if s:save_scrolloff != ""
         execute "silent! set scrolloff=" . g:vimroom_scrolloff
     endif
