@@ -143,20 +143,7 @@ function! <SID>VimroomToggle()
             call s:SetLocalOptions()
             call s:SetGlobalOptions()
             call s:SetNavigationMappings()
-            if has('gui_running')
-                let bg = s:GetBackgroundColor("guibg")
-                let hi_bg_color = "guibg=" . bg
-                let hi_fg_color = "guifg=" . bg
-            else
-                let bg = s:GetBackgroundColor("ctermbg")
-                let hi_bg_color = "ctermbg=" . bg
-                let hi_fg_color = "ctermfg=" . bg
-            endif
-            execute "hi Normal " . hi_bg_color
-            execute "hi VertSplit " . hi_fg_color . " " . hi_bg_color
-            execute "hi NonText " . hi_fg_color . " " . hi_bg_color
-            execute "hi StatusLine " . hi_fg_color . " " . hi_bg_color
-            execute "hi StatusLineNC " . hi_fg_color . " " . hi_bg_color
+            call s:SetVimRoomBackground()
         endif
     endif
 endfunction
@@ -224,16 +211,17 @@ function! s:SetNavigationMappings()
 endfunction
 
 
-function! s:GetBackgroundColor(term)
-    let oldz = @z
-    redir @z
-    highlight Normal
-    redir END
 
-    let match_re = '\v' . a:term . '\=\zs\S+'
-    let bg = matchstr(@z, match_re)
-    let @z = oldz
-    return bg
+function! s:SetVimRoomBackground()
+    if has('gui_running')
+        let hi_color = "guifg=bg guibg=bg"
+    else
+        let hi_color = "ctermfg=bg ctermbg=bg"
+    endif
+    execute "hi VertSplit " . hi_color
+    execute "hi NonText " . hi_color
+    execute "hi StatusLine " . hi_color
+    execute "hi StatusLineNC " . hi_color
 endfunction
 
 noremap <silent> <Plug>VimroomToggle    :call <SID>VimroomToggle()<CR>
