@@ -139,38 +139,40 @@ function! <SID>VimroomToggle()
     else
         if s:is_screen_wide_enough()
             let s:active = 1
-            call s:CenterScreen()
+            call s:SaveState()
             call s:SetLocalOptions()
             call s:SetGlobalOptions()
             call s:SetNavigationMappings()
             call s:SetVimRoomBackground()
+            call s:CenterScreen()
         endif
     endif
 endfunction
 
 
-function! s:CenterScreen()
-    if g:vimroom_min_sidebar_width
-        let sidebar_size = s:sidebar_size()
-        call s:OpenSidebar(sidebar_size, "H")
-        call s:OpenSidebar(sidebar_size, "L")
-    endif
-    if g:vimroom_sidebar_height
-        let sidebar_size = g:vimroom_sidebar_height
-        call s:OpenSidebar(sidebar_size, "K")
-        call s:OpenSidebar(sidebar_size, "J")
-    endif
+function! s:SaveState()
+    silent! let s:save_t_mr = &t_mr
+    silent! let s:save_fillchars = &fillchars
+    silent! let s:save_scrolloff = &scrolloff
+    silent! let s:save_laststatus = &laststatus
+
+    let s:save_vertsplit = s:GetHighlighting("VertSplit")
+    let s:save_nontext = s:GetHighlighting("NonText")
+    let s:save_statusline = s:GetHighlighting("StatusLine")
+    let s:save_statuslinenc = s:GetHighlighting("StatusLineNC")
 endfunction
 
 
-function! s:OpenSidebar(size, direction)
-    execute "silent leftabove " . a:size . "split new"
-    execute "wincmd " . toupper(a:direction)
-    silent! setlocal nomodifiable
-    silent! setlocal nocursorline
-    silent! setlocal nonumber
-    silent! setlocal norelativenumber
-    wincmd p
+function! s:GetHighlighting(hlgroup)
+    let oldz = @z
+    redir @z
+    execute "highlight " . a:hlgroup
+    redir END
+
+    let strip_new_lines = substitute(@z, '\n', '', 'g')
+    let highlighting = substitute(strip_new_lines, a:hlgroup . '\v\s*xxx\s*', '', '')
+    let @z = oldz
+    return highlighting
 endfunction
 
 
@@ -211,7 +213,6 @@ function! s:SetNavigationMappings()
 endfunction
 
 
-
 function! s:SetVimRoomBackground()
     if has('gui_running')
         let hi_color = "guifg=bg guibg=bg"
@@ -223,6 +224,33 @@ function! s:SetVimRoomBackground()
     execute "hi StatusLine " . hi_color
     execute "hi StatusLineNC " . hi_color
 endfunction
+
+
+function! s:CenterScreen()
+    if g:vimroom_min_sidebar_width
+        let sidebar_size = s:sidebar_size()
+        call s:OpenSidebar(sidebar_size, "H")
+        call s:OpenSidebar(sidebar_size, "L")
+    endif
+    if g:vimroom_sidebar_height
+        let sidebar_size = g:vimroom_sidebar_height
+        call s:OpenSidebar(sidebar_size, "K")
+        call s:OpenSidebar(sidebar_size, "J")
+    endif
+endfunction
+
+
+function! s:OpenSidebar(size, direction)
+    execute "silent leftabove " . a:size . "split new"
+    execute "wincmd " . toupper(a:direction)
+    silent! setlocal nomodifiable
+    silent! setlocal nocursorline
+    silent! setlocal nonumber
+    silent! setlocal norelativenumber
+    wincmd p
+endfunction
+
+
 
 noremap <silent> <Plug>VimroomToggle    :call <SID>VimroomToggle()<CR>
 
