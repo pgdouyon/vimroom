@@ -190,8 +190,8 @@ endfunction
 
 
 function! s:SetGlobalOptions()
-    set t_mr
-    set fillchars+=vert:\ 
+    silent! set t_mr
+    silent! set fillchars+=vert:\ 
     if s:save_scrolloff != ""
         execute "silent! set scrolloff=" . g:vimroom_scrolloff
     endif
