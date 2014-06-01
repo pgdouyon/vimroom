@@ -140,14 +140,14 @@ function! <SID>VimroomToggle()
         if s:is_screen_wide_enough()
             let s:active = 1
             call s:SaveState()
+            if exists(":AirlineToggle")
+                silent! AirlineToggle
+            endif
             call s:SetLocalOptions()
             call s:SetGlobalOptions()
             call s:SetNavigationMappings()
             call s:SetVimRoomBackground()
             call s:CenterScreen()
-            if exists(":AirlineToggle")
-                silent AirlineToggle
-            endif
         endif
     endif
 endfunction
@@ -158,6 +158,8 @@ function! s:SaveState()
     silent! let s:save_fillchars = &fillchars
     silent! let s:save_scrolloff = &scrolloff
     silent! let s:save_laststatus = &laststatus
+    silent! let s:save_guitablabel = &guitablabel
+    silent! let s:save_tabline = &tabline
 
     let s:save_vertsplit = s:GetHighlighting("VertSplit")
     let s:save_nontext = s:GetHighlighting("NonText")
@@ -180,6 +182,7 @@ endfunction
 
 
 function! s:SetLocalOptions()
+    silent! setlocal statusline=\ 
     silent! setlocal wrap
     silent! setlocal linebreak
     execute "silent! setlocal textwidth=" . g:vimroom_width
@@ -194,6 +197,8 @@ function! s:SetGlobalOptions()
     silent! set t_mr
     silent! set fillchars+=vert:\ 
     silent! set laststatus=0
+    silent! set guitablabel-=e
+    silent! set tabline=\ 
     execute "silent! set scrolloff=" . g:vimroom_scrolloff
 endfunction
 
@@ -244,6 +249,7 @@ function! s:OpenSidebar(size, direction)
     silent! setlocal nocursorline
     silent! setlocal nonumber
     silent! setlocal norelativenumber
+    silent! setlocal statusline=\ 
     wincmd p
 endfunction
 
