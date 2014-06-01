@@ -99,6 +99,7 @@ function! <SID>VimroomToggle()
         call s:ResetHighlighting()
         call s:ResetNavigationMappings()
         call s:ResetGlobalOptions()
+        call s:ResetLocalOptions()
         if s:save_t_mr != ""
             exec( "set t_mr=" .s:save_t_mr )
         endif
@@ -139,6 +140,14 @@ endfunction
 
 
 function! s:SaveState()
+    silent! let s:save_l_statusline = &l:statusline
+    silent! let s:save_l_wrap = &l:wrap
+    silent! let s:save_l_linebreak = &l:linebreak
+    silent! let s:save_l_textwidth = &l:textwidth
+    silent! let s:save_l_textwidth = &l:textwidth
+    silent! let s:save_l_number = &l:number
+    silent! let s:save_l_relativenumber = &l:relativenumber
+
     silent! let s:save_t_mr = &t_mr
     silent! let s:save_fillchars = &fillchars
     silent! let s:save_scrolloff = &scrolloff
@@ -274,6 +283,17 @@ function! s:ResetGlobalOptions()
     silent! let &guitablabel = s:save_guitablabel
     silent! let &tabline = s:save_tabline
     silent! let &scrolloff = s:save_scrolloff
+endfunction
+
+
+function! s:ResetLocalOptions()
+    silent! let &l:statusline = s:save_l_statusline
+    silent! let &l:wrap = s:save_l_wrap
+    silent! let &l:linebreak = s:save_l_linebreak
+    silent! let &l:textwidth = s:save_l_textwidth
+    silent! let &l:textwidth = s:save_l_textwidth
+    silent! let &l:number = s:save_l_number
+    silent! let &l:relativenumber = s:save_l_relativenumber
 endfunction
 
 noremap <silent> <Plug>VimroomToggle    :call <SID>VimroomToggle()<CR>
