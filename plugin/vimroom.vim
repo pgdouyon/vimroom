@@ -98,6 +98,7 @@ function! <SID>VimroomToggle()
         wincmd o
         call s:ResetHighlighting()
         call s:ResetNavigationMappings()
+        call s:ResetGlobalOptions()
         if s:save_t_mr != ""
             exec( "set t_mr=" .s:save_t_mr )
         endif
@@ -262,6 +263,17 @@ function! s:ResetNavigationMappings()
     silent! unmap <buffer> <Down>
     silent! iunmap <buffer> <Up>
     silent! iunmap <buffer> <Down>
+endfunction
+
+
+function! s:ResetGlobalOptions()
+    silent! let &t_mr = s:save_t_mr
+    silent! let &fillchars = s:save_fillchars
+    silent! let &laststatus = s:save_laststatus
+    silent! let &guioptions = s:save_guioptions
+    silent! let &guitablabel = s:save_guitablabel
+    silent! let &tabline = s:save_tabline
+    silent! let &scrolloff = s:save_scrolloff
 endfunction
 
 noremap <silent> <Plug>VimroomToggle    :call <SID>VimroomToggle()<CR>
