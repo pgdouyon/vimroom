@@ -182,12 +182,10 @@ endfunction
 function! s:SetLocalOptions()
     silent! setlocal wrap
     silent! setlocal linebreak
+    execute "silent! setlocal textwidth=" . g:vimroom_width
     if g:vimroom_clear_line_numbers
         silent! setlocal nonumber
         silent! setlocal norelativenumber
-    endif
-    if s:save_textwidth != ""
-        execute "silent! setlocal textwidth=" . g:vimroom_width
     endif
 endfunction
 
@@ -195,12 +193,8 @@ endfunction
 function! s:SetGlobalOptions()
     silent! set t_mr
     silent! set fillchars+=vert:\ 
-    if s:save_scrolloff != ""
-        execute "silent! set scrolloff=" . g:vimroom_scrolloff
-    endif
-    if s:save_laststatus != ""
-        silent! set laststatus=0
-    endif
+    silent! set laststatus=0
+    execute "silent! set scrolloff=" . g:vimroom_scrolloff
 endfunction
 
 
