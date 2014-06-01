@@ -154,7 +154,7 @@ function! s:SaveState()
     let s:save_nontext = s:GetHighlighting("NonText")
     let s:save_statusline = s:GetHighlighting("StatusLine")
     let s:save_statuslinenc = s:GetHighlighting("StatusLineNC")
-    let s:save_statuslinenc = s:GetHighlighting("SignColumn")
+    let s:save_signcolumn = s:GetHighlighting("SignColumn")
 endfunction
 
 
