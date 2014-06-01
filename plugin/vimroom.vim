@@ -158,6 +158,7 @@ function! s:SaveState()
     silent! let s:save_fillchars = &fillchars
     silent! let s:save_scrolloff = &scrolloff
     silent! let s:save_laststatus = &laststatus
+    silent! let s:save_guioptions = &guioptions
     silent! let s:save_guitablabel = &guitablabel
     silent! let s:save_tabline = &tabline
 
@@ -197,6 +198,10 @@ function! s:SetGlobalOptions()
     silent! set t_mr
     silent! set fillchars+=vert:\ 
     silent! set laststatus=0
+    silent! set guioptions-=r
+    silent! set guioptions-=R
+    silent! set guioptions-=l
+    silent! set guioptions-=L
     silent! set guitablabel-=e
     silent! set tabline=\ 
     execute "silent! set scrolloff=" . g:vimroom_scrolloff
