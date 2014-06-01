@@ -100,6 +100,9 @@ function! <SID>VimroomToggle()
         call s:ResetNavigationMappings()
         call s:ResetGlobalOptions()
         call s:ResetLocalOptions()
+        if exists(":AirlineToggle")
+            silent AirlineToggle
+        endif
     else
         if s:is_screen_wide_enough()
             let s:active = 1
