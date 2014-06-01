@@ -95,47 +95,14 @@ endfunction
 function! <SID>VimroomToggle()
     if s:active == 1
         let s:active = 0
-        " Close all other split windows
-        if g:vimroom_sidebar_height
-            wincmd j
-            close
-            wincmd k
-            close
+        wincmd o
+        call s:ResetHighlighting()
+        call s:ResetNavigationMappings()
+        call s:ResetGlobalOptions()
+        call s:ResetLocalOptions()
+        if exists(":AirlineToggle")
+            silent AirlineToggle
         endif
-        if g:vimroom_min_sidebar_width
-            wincmd l
-            close
-            wincmd h
-            close
-        endif
-        " Reset color scheme (or clear new colors, if no scheme is set)
-        if s:scheme != ""
-            exec( "colorscheme " . s:scheme ) 
-        else
-            hi clear
-        endif
-        if s:save_t_mr != ""
-            exec( "set t_mr=" .s:save_t_mr )
-        endif
-        " Reset `scrolloff` and `laststatus`
-        if s:save_scrolloff != ""
-            exec( "set scrolloff=" . s:save_scrolloff )
-        endif
-        if s:save_laststatus != ""
-            exec( "set laststatus=" . s:save_laststatus )
-        endif
-        if s:save_textwidth != ""
-            exec( "set textwidth=" . s:save_textwidth )
-        endif
-        if s:save_number != 0
-            set number
-        endif
-        if s:save_relativenumber != 0
-            set relativenumber
-        endif
-        " Remove wrapping and linebreaks
-        set nowrap
-        set nolinebreak
     else
         if s:is_screen_wide_enough()
             let s:active = 1
@@ -154,6 +121,14 @@ endfunction
 
 
 function! s:SaveState()
+    silent! let s:save_l_statusline = &l:statusline
+    silent! let s:save_l_wrap = &l:wrap
+    silent! let s:save_l_linebreak = &l:linebreak
+    silent! let s:save_l_textwidth = &l:textwidth
+    silent! let s:save_l_textwidth = &l:textwidth
+    silent! let s:save_l_number = &l:number
+    silent! let s:save_l_relativenumber = &l:relativenumber
+
     silent! let s:save_t_mr = &t_mr
     silent! let s:save_fillchars = &fillchars
     silent! let s:save_scrolloff = &scrolloff
@@ -166,7 +141,7 @@ function! s:SaveState()
     let s:save_nontext = s:GetHighlighting("NonText")
     let s:save_statusline = s:GetHighlighting("StatusLine")
     let s:save_statuslinenc = s:GetHighlighting("StatusLineNC")
-    let s:save_statuslinenc = s:GetHighlighting("SignColumn")
+    let s:save_signcolumn = s:GetHighlighting("SignColumn")
 endfunction
 
 
@@ -262,6 +237,45 @@ function! s:OpenSidebar(size, direction)
 endfunction
 
 
+function! s:ResetHighlighting()
+    execute "silent highlight VertSplit " . s:save_vertsplit
+    execute "silent highlight NonText " . s:save_nontext
+    execute "silent highlight StatusLine " . s:save_statusline
+    execute "silent highlight StatusLineNC " . s:save_statuslinenc
+    execute "silent highlight SignColumn " . s:save_signcolumn
+endfunction
+
+
+function! s:ResetNavigationMappings()
+    silent! unmap <buffer> j
+    silent! unmap <buffer> k
+    silent! unmap <buffer> <Up>
+    silent! unmap <buffer> <Down>
+    silent! iunmap <buffer> <Up>
+    silent! iunmap <buffer> <Down>
+endfunction
+
+
+function! s:ResetGlobalOptions()
+    silent! let &t_mr = s:save_t_mr
+    silent! let &fillchars = s:save_fillchars
+    silent! let &laststatus = s:save_laststatus
+    silent! let &guioptions = s:save_guioptions
+    silent! let &guitablabel = s:save_guitablabel
+    silent! let &tabline = s:save_tabline
+    silent! let &scrolloff = s:save_scrolloff
+endfunction
+
+
+function! s:ResetLocalOptions()
+    silent! let &l:statusline = s:save_l_statusline
+    silent! let &l:wrap = s:save_l_wrap
+    silent! let &l:linebreak = s:save_l_linebreak
+    silent! let &l:textwidth = s:save_l_textwidth
+    silent! let &l:textwidth = s:save_l_textwidth
+    silent! let &l:number = s:save_l_number
+    silent! let &l:relativenumber = s:save_l_relativenumber
+endfunction
 
 noremap <silent> <Plug>VimroomToggle    :call <SID>VimroomToggle()<CR>
 
