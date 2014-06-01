@@ -166,7 +166,7 @@ endfunction
 function! s:GetHighlighting(hlgroup)
     let oldz = @z
     redir @z
-    execute "highlight " . a:hlgroup
+    silent execute "highlight " . a:hlgroup
     redir END
 
     let strip_new_lines = substitute(@z, '\n', '', 'g')
@@ -219,10 +219,10 @@ function! s:SetVimRoomBackground()
     else
         let hi_color = "ctermfg=bg ctermbg=bg"
     endif
-    execute "hi VertSplit " . hi_color
-    execute "hi NonText " . hi_color
-    execute "hi StatusLine " . hi_color
-    execute "hi StatusLineNC " . hi_color
+    silent execute "highlight VertSplit " . hi_color
+    silent execute "highlight NonText " . hi_color
+    silent execute "highlight StatusLine " . hi_color
+    silent execute "highlight StatusLineNC " . hi_color
 endfunction
 
 
