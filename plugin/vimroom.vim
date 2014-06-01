@@ -95,19 +95,7 @@ endfunction
 function! <SID>VimroomToggle()
     if s:active == 1
         let s:active = 0
-        " Close all other split windows
-        if g:vimroom_sidebar_height
-            wincmd j
-            close
-            wincmd k
-            close
-        endif
-        if g:vimroom_min_sidebar_width
-            wincmd l
-            close
-            wincmd h
-            close
-        endif
+        wincmd o
         " Reset color scheme (or clear new colors, if no scheme is set)
         if s:scheme != ""
             exec( "colorscheme " . s:scheme ) 
