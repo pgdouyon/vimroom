@@ -235,6 +235,7 @@ endfunction
 
 
 function! s:CenterScreen()
+    silent! wincmd T
     if g:vimroom_min_sidebar_width
         let sidebar_size = s:sidebar_size()
         call s:OpenSidebar(sidebar_size, "H")
