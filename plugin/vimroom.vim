@@ -96,12 +96,7 @@ function! <SID>VimroomToggle()
     if s:active == 1
         let s:active = 0
         wincmd o
-        " Reset color scheme (or clear new colors, if no scheme is set)
-        if s:scheme != ""
-            exec( "colorscheme " . s:scheme ) 
-        else
-            hi clear
-        endif
+        call s:ResetHighlighting()
         if s:save_t_mr != ""
             exec( "set t_mr=" .s:save_t_mr )
         endif
@@ -250,6 +245,13 @@ function! s:OpenSidebar(size, direction)
 endfunction
 
 
+function! s:ResetHighlighting()
+    execute "silent highlight VertSplit " . s:save_vertsplit
+    execute "silent highlight NonText " . s:save_nontext
+    execute "silent highlight StatusLine " . s:save_statusline
+    execute "silent highlight StatusLineNC " . s:save_statuslinenc
+    execute "silent highlight SignColumn " . s:save_signcolumn
+endfunction
 
 noremap <silent> <Plug>VimroomToggle    :call <SID>VimroomToggle()<CR>
 
