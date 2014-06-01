@@ -97,6 +97,7 @@ function! <SID>VimroomToggle()
         let s:active = 0
         wincmd o
         call s:ResetHighlighting()
+        call s:ResetNavigationMappings()
         if s:save_t_mr != ""
             exec( "set t_mr=" .s:save_t_mr )
         endif
@@ -251,6 +252,16 @@ function! s:ResetHighlighting()
     execute "silent highlight StatusLine " . s:save_statusline
     execute "silent highlight StatusLineNC " . s:save_statuslinenc
     execute "silent highlight SignColumn " . s:save_signcolumn
+endfunction
+
+
+function! s:ResetNavigationMappings()
+    silent! unmap <buffer> j
+    silent! unmap <buffer> k
+    silent! unmap <buffer> <Up>
+    silent! unmap <buffer> <Down>
+    silent! iunmap <buffer> <Up>
+    silent! iunmap <buffer> <Down>
 endfunction
 
 noremap <silent> <Plug>VimroomToggle    :call <SID>VimroomToggle()<CR>
