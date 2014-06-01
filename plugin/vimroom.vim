@@ -106,7 +106,6 @@ function! <SID>VimroomToggle()
     else
         if s:is_screen_wide_enough()
             let s:active = 1
-            call s:SaveState()
             if exists(":AirlineToggle")
                 silent! AirlineToggle
             endif
@@ -117,31 +116,6 @@ function! <SID>VimroomToggle()
             call s:CenterScreen()
         endif
     endif
-endfunction
-
-
-function! s:SaveState()
-    silent! let s:save_l_statusline = &l:statusline
-    silent! let s:save_l_wrap = &l:wrap
-    silent! let s:save_l_linebreak = &l:linebreak
-    silent! let s:save_l_textwidth = &l:textwidth
-    silent! let s:save_l_textwidth = &l:textwidth
-    silent! let s:save_l_number = &l:number
-    silent! let s:save_l_relativenumber = &l:relativenumber
-
-    silent! let s:save_t_mr = &t_mr
-    silent! let s:save_fillchars = &fillchars
-    silent! let s:save_scrolloff = &scrolloff
-    silent! let s:save_laststatus = &laststatus
-    silent! let s:save_guioptions = &guioptions
-    silent! let s:save_guitablabel = &guitablabel
-    silent! let s:save_tabline = &tabline
-
-    let s:save_vertsplit = s:GetHighlighting("VertSplit")
-    let s:save_nontext = s:GetHighlighting("NonText")
-    let s:save_statusline = s:GetHighlighting("StatusLine")
-    let s:save_statuslinenc = s:GetHighlighting("StatusLineNC")
-    let s:save_signcolumn = s:GetHighlighting("SignColumn")
 endfunction
 
 
@@ -159,6 +133,13 @@ endfunction
 
 
 function! s:SetLocalOptions()
+    silent! let s:save_l_statusline = &l:statusline
+    silent! let s:save_l_wrap = &l:wrap
+    silent! let s:save_l_linebreak = &l:linebreak
+    silent! let s:save_l_textwidth = &l:textwidth
+    silent! let s:save_l_number = &l:number
+    silent! let s:save_l_relativenumber = &l:relativenumber
+
     silent! setlocal statusline=\ 
     silent! setlocal wrap
     silent! setlocal linebreak
@@ -171,6 +152,14 @@ endfunction
 
 
 function! s:SetGlobalOptions()
+    silent! let s:save_t_mr = &t_mr
+    silent! let s:save_fillchars = &fillchars
+    silent! let s:save_laststatus = &laststatus
+    silent! let s:save_guioptions = &guioptions
+    silent! let s:save_guitablabel = &guitablabel
+    silent! let s:save_tabline = &tabline
+    silent! let s:save_scrolloff = &scrolloff
+
     silent! set t_mr
     silent! set fillchars+=vert:\ 
     silent! set laststatus=0
@@ -197,6 +186,12 @@ endfunction
 
 
 function! s:SetVimRoomBackground()
+    let s:save_vertsplit = s:GetHighlighting("VertSplit")
+    let s:save_nontext = s:GetHighlighting("NonText")
+    let s:save_statusline = s:GetHighlighting("StatusLine")
+    let s:save_statuslinenc = s:GetHighlighting("StatusLineNC")
+    let s:save_signcolumn = s:GetHighlighting("SignColumn")
+
     if has('gui_running')
         let hi_color = "guifg=bg guibg=bg"
     else
