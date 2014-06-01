@@ -230,6 +230,7 @@ function! s:SetVimRoomBackground()
     silent execute "highlight NonText " . hi_color
     silent execute "highlight StatusLine " . hi_color
     silent execute "highlight StatusLineNC " . hi_color
+    silent execute "highlight SignColumn " . hi_color
 endfunction
 
 
