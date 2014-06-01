@@ -145,6 +145,9 @@ function! <SID>VimroomToggle()
             call s:SetNavigationMappings()
             call s:SetVimRoomBackground()
             call s:CenterScreen()
+            if exists(":AirlineToggle")
+                silent AirlineToggle
+            endif
         endif
     endif
 endfunction
