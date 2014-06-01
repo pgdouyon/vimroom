@@ -100,28 +100,6 @@ function! <SID>VimroomToggle()
         call s:ResetNavigationMappings()
         call s:ResetGlobalOptions()
         call s:ResetLocalOptions()
-        if s:save_t_mr != ""
-            exec( "set t_mr=" .s:save_t_mr )
-        endif
-        " Reset `scrolloff` and `laststatus`
-        if s:save_scrolloff != ""
-            exec( "set scrolloff=" . s:save_scrolloff )
-        endif
-        if s:save_laststatus != ""
-            exec( "set laststatus=" . s:save_laststatus )
-        endif
-        if s:save_textwidth != ""
-            exec( "set textwidth=" . s:save_textwidth )
-        endif
-        if s:save_number != 0
-            set number
-        endif
-        if s:save_relativenumber != 0
-            set relativenumber
-        endif
-        " Remove wrapping and linebreaks
-        set nowrap
-        set nolinebreak
     else
         if s:is_screen_wide_enough()
             let s:active = 1
