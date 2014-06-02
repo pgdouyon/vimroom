@@ -55,15 +55,6 @@ function! s:is_screen_tall_enough()
     return winheight(0) >= (2 * g:vimroom_sidebar_height + 1)
 endfunction
 
-function! s:sidebar_size()
-    let save_cursor = getpos(".")
-    normal! 0
-    let window_width = winwidth(0) - (wincol() - 1)
-    let sidebar_size = (window_width - g:vimroom_width) / 2
-    call setpos(".", save_cursor)
-    return sidebar_size
-endfunction
-
 function! <SID>VimroomToggle()
     if s:active == 1
         let s:active = 0
@@ -181,21 +172,22 @@ endfunction
 
 function! s:CenterScreen()
     silent! wincmd T
-    if g:vimroom_min_sidebar_width
-        let sidebar_size = s:sidebar_size()
-        call s:OpenSidebar(sidebar_size, "H")
-        call s:OpenSidebar(sidebar_size, "L")
+    let vimroom_height = winheight(0) - (2 * g:vimroom_sidebar_height)
+    if g:vimroom_min_sidebar_width != 0
+        call s:OpenSidebar("H")
+        call s:OpenSidebar("L")
     endif
-    if g:vimroom_sidebar_height
-        let sidebar_size = g:vimroom_sidebar_height
-        call s:OpenSidebar(sidebar_size, "K")
-        call s:OpenSidebar(sidebar_size, "J")
+    if g:vimroom_sidebar_height != 0
+        call s:OpenSidebar("K")
+        call s:OpenSidebar("J")
     endif
+    execute "resize " . vimroom_height
+    execute "vertical resize " . g:vimroom_width
 endfunction
 
 
-function! s:OpenSidebar(size, direction)
-    execute "silent leftabove " . a:size . "split new"
+function! s:OpenSidebar(direction)
+    new
     execute "wincmd " . toupper(a:direction)
     silent! setlocal nomodifiable
     silent! setlocal nocursorline
