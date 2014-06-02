@@ -50,7 +50,11 @@ let s:minwidth = g:vimroom_width + ( g:vimroom_min_sidebar_width * 2 )
 let s:active = 0
 
 function! s:is_screen_wide_enough()
-    return winwidth( winnr() ) >= s:minwidth
+    return winwidth(0) >= s:minwidth
+endfunction
+
+function! s:is_screen_tall_enough()
+    return winheight(0) >= (2 * g:vimroom_sidebar_height + 1)
 endfunction
 
 function! s:sidebar_size()
@@ -69,7 +73,7 @@ function! <SID>VimroomToggle()
             silent AirlineToggle
         endif
     else
-        if s:is_screen_wide_enough()
+        if s:is_screen_wide_enough() && s:is_screen_tall_enough()
             let s:active = 1
             if exists(":AirlineToggle")
                 silent! AirlineToggle
@@ -79,6 +83,8 @@ function! <SID>VimroomToggle()
             call s:SetNavigationMappings()
             call s:SetVimRoomBackground()
             call s:CenterScreen()
+        else
+            echoerr "VimRoom - Screen is too small."
         endif
     endif
 endfunction
