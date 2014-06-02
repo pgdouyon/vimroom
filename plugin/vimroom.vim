@@ -83,19 +83,6 @@ function! <SID>VimroomToggle()
 endfunction
 
 
-function! s:GetHighlighting(hlgroup)
-    let oldz = @z
-    redir @z
-    silent execute "highlight " . a:hlgroup
-    redir END
-
-    let strip_new_lines = substitute(@z, '\n', '', 'g')
-    let highlighting = substitute(strip_new_lines, a:hlgroup . '\v\s*xxx\s*', '', '')
-    let @z = oldz
-    return highlighting
-endfunction
-
-
 function! s:SetLocalOptions()
     silent! let s:save_l_statusline = &l:statusline
     silent! let s:save_l_wrap = &l:wrap
@@ -166,6 +153,19 @@ function! s:SetVimRoomBackground()
     silent execute "highlight StatusLine " . hi_color
     silent execute "highlight StatusLineNC " . hi_color
     silent execute "highlight SignColumn " . hi_color
+endfunction
+
+
+function! s:GetHighlighting(hlgroup)
+    let oldz = @z
+    redir @z
+    silent execute "highlight " . a:hlgroup
+    redir END
+
+    let strip_new_lines = substitute(@z, '\n', '', 'g')
+    let highlighting = substitute(strip_new_lines, a:hlgroup . '\v\s*xxx\s*', '', '')
+    let @z = oldz
+    return highlighting
 endfunction
 
 
