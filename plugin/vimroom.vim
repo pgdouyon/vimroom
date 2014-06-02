@@ -56,7 +56,12 @@ function! s:is_screen_tall_enough()
 endfunction
 
 function! s:sidebar_size()
-    return ( winwidth( winnr() ) - g:vimroom_width - 2 ) / 2
+    let save_cursor = getpos(".")
+    normal! 0
+    let window_width = winwidth(0) - (wincol() - 1)
+    let sidebar_size = (window_width - g:vimroom_width) / 2
+    call setpos(".", save_cursor)
+    return sidebar_size
 endfunction
 
 function! <SID>VimroomToggle()
