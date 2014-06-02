@@ -47,41 +47,6 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let s:minwidth = g:vimroom_width + ( g:vimroom_min_sidebar_width * 2 )
 
-let s:scheme = ""
-if exists( "g:colors_name" )
-    let s:scheme = g:colors_name
-endif
-
-let s:save_t_mr = ""
-if exists( "&t_mr" )
-    let s:save_t_mr = &t_mr
-end
-
-let s:save_scrolloff = ""
-if exists( "&scrolloff" )
-    let s:save_scrolloff = &scrolloff
-end
-
-let s:save_laststatus = ""
-if exists( "&laststatus" )
-    let s:save_laststatus = &laststatus
-endif
-
-let s:save_textwidth = ""
-if exists( "&textwidth" )
-    let s:save_textwidth = &textwidth
-endif
-
-let s:save_number = 0
-if exists( "&number" )
-    let s:save_number = &number
-endif
-
-let s:save_relativenumber = 0
-if exists ( "&relativenumber" )
-    let s:save_relativenumber = &relativenumber
-endif
-
 let s:active = 0
 
 function! s:is_screen_wide_enough()
