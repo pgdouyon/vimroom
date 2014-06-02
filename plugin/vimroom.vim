@@ -193,7 +193,11 @@ function! s:OpenSidebar(direction)
     silent! setlocal nocursorline
     silent! setlocal nonumber
     silent! setlocal norelativenumber
+    silent! setlocal nobuflisted
+    silent! setlocal bufhidden=wipe
+    silent! setlocal buftype=nofile
     silent! setlocal statusline=\ 
+    autocmd BufEnter <buffer> wincmd p
     wincmd p
 endfunction
 
