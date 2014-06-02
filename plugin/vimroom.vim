@@ -45,12 +45,10 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin Code
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let s:minwidth = g:vimroom_width + ( g:vimroom_min_sidebar_width * 2 )
-
 let s:active = 0
 
 function! s:is_screen_wide_enough()
-    return winwidth(0) >= s:minwidth
+    return winwidth(0) >= g:vimroom_width + ( g:vimroom_min_sidebar_width * 2 )
 endfunction
 
 function! s:is_screen_tall_enough()
