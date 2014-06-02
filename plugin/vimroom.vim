@@ -58,27 +58,37 @@ function! s:VimroomToggle()
     if !exists("t:vimroom_enabled")
         if s:is_screen_wide_enough() && s:is_screen_tall_enough()
             let t:vimroom_enabled = 1
-            if exists(":AirlineToggle")
-                silent! AirlineToggle
-            endif
-            call s:SetLocalOptions()
-            call s:SetGlobalOptions()
-            call s:SetNavigationMappings()
-            call s:SetVimRoomBackground()
-            call s:CenterScreen()
+            call s:SetupVimRoom()
         else
             echoerr "VimRoom - Screen is too small."
         endif
     else
         unlet t:vimroom_enabled
-        only
-        call s:ResetHighlighting()
-        call s:ResetNavigationMappings()
-        call s:ResetGlobalOptions()
-        call s:ResetLocalOptions()
-        if exists(":AirlineToggle")
-            silent AirlineToggle
-        endif
+        call s:TeardownVimRoom()
+    endif
+endfunction
+
+
+function! s:SetupVimRoom()
+    if exists(":AirlineToggle")
+        silent! AirlineToggle
+    endif
+    call s:SetLocalOptions()
+    call s:SetGlobalOptions()
+    call s:SetNavigationMappings()
+    call s:SetVimRoomBackground()
+    call s:CenterScreen()
+endfunction
+
+
+function! s:TeardownVimRoom()
+    only
+    call s:ResetHighlighting()
+    call s:ResetNavigationMappings()
+    call s:ResetGlobalOptions()
+    call s:ResetLocalOptions()
+    if exists(":AirlineToggle")
+        silent AirlineToggle
     endif
 endfunction
 
