@@ -45,7 +45,6 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin Code
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let s:active = 0
 
 function! s:is_screen_wide_enough()
     return winwidth(0) >= g:vimroom_width + ( g:vimroom_min_sidebar_width * 2 )
@@ -56,19 +55,9 @@ function! s:is_screen_tall_enough()
 endfunction
 
 function! <SID>VimroomToggle()
-    if s:active == 1
-        let s:active = 0
-        wincmd o
-        call s:ResetHighlighting()
-        call s:ResetNavigationMappings()
-        call s:ResetGlobalOptions()
-        call s:ResetLocalOptions()
-        if exists(":AirlineToggle")
-            silent AirlineToggle
-        endif
-    else
+    if !exists("b:vimroom_enabled")
         if s:is_screen_wide_enough() && s:is_screen_tall_enough()
-            let s:active = 1
+            let b:vimroom_enabled = 1
             if exists(":AirlineToggle")
                 silent! AirlineToggle
             endif
@@ -79,6 +68,16 @@ function! <SID>VimroomToggle()
             call s:CenterScreen()
         else
             echoerr "VimRoom - Screen is too small."
+        endif
+    else
+        unlet b:vimroom_enabled
+        only
+        call s:ResetHighlighting()
+        call s:ResetNavigationMappings()
+        call s:ResetGlobalOptions()
+        call s:ResetLocalOptions()
+        if exists(":AirlineToggle")
+            silent AirlineToggle
         endif
     endif
 endfunction
