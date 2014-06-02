@@ -84,12 +84,12 @@ endfunction
 
 
 function! s:SetLocalOptions()
-    silent! let s:save_l_statusline = &l:statusline
-    silent! let s:save_l_wrap = &l:wrap
-    silent! let s:save_l_linebreak = &l:linebreak
-    silent! let s:save_l_textwidth = &l:textwidth
-    silent! let s:save_l_number = &l:number
-    silent! let s:save_l_relativenumber = &l:relativenumber
+    silent! let b:vimroom_save_l_statusline = &l:statusline
+    silent! let b:vimroom_save_l_wrap = &l:wrap
+    silent! let b:vimroom_save_l_linebreak = &l:linebreak
+    silent! let b:vimroom_save_l_textwidth = &l:textwidth
+    silent! let b:vimroom_save_l_number = &l:number
+    silent! let b:vimroom_save_l_relativenumber = &l:relativenumber
 
     silent! setlocal statusline=\ 
     silent! setlocal wrap
@@ -232,13 +232,13 @@ endfunction
 
 
 function! s:ResetLocalOptions()
-    silent! let &l:statusline = s:save_l_statusline
-    silent! let &l:wrap = s:save_l_wrap
-    silent! let &l:linebreak = s:save_l_linebreak
-    silent! let &l:textwidth = s:save_l_textwidth
-    silent! let &l:textwidth = s:save_l_textwidth
-    silent! let &l:number = s:save_l_number
-    silent! let &l:relativenumber = s:save_l_relativenumber
+    silent! let &l:statusline = b:vimroom_save_l_statusline
+    silent! let &l:wrap = b:vimroom_save_l_wrap
+    silent! let &l:linebreak = b:vimroom_save_l_linebreak
+    silent! let &l:textwidth = b:vimroom_save_l_textwidth
+    silent! let &l:textwidth = b:vimroom_save_l_textwidth
+    silent! let &l:number = b:vimroom_save_l_number
+    silent! let &l:relativenumber = b:vimroom_save_l_relativenumber
 endfunction
 
 noremap <silent> <Plug>VimroomToggle    :call <SID>VimroomToggle()<CR>
