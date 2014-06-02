@@ -54,10 +54,10 @@ function! s:is_screen_tall_enough()
     return winheight(0) >= (2 * g:vimroom_sidebar_height + 1)
 endfunction
 
-function! <SID>VimroomToggle()
-    if !exists("b:vimroom_enabled")
+function! s:VimroomToggle()
+    if !exists("t:vimroom_enabled")
         if s:is_screen_wide_enough() && s:is_screen_tall_enough()
-            let b:vimroom_enabled = 1
+            let t:vimroom_enabled = 1
             if exists(":AirlineToggle")
                 silent! AirlineToggle
             endif
@@ -70,7 +70,7 @@ function! <SID>VimroomToggle()
             echoerr "VimRoom - Screen is too small."
         endif
     else
-        unlet b:vimroom_enabled
+        unlet t:vimroom_enabled
         only
         call s:ResetHighlighting()
         call s:ResetNavigationMappings()
