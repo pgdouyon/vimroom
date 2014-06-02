@@ -43,18 +43,6 @@ if !exists( "g:vimroom_clear_line_numbers" )
 endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Autocommands
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-augroup vimroom
-    autocmd!
-    autocmd TabEnter * if exists("t:vimroom_enabled")|call <SID>SetupVimRoom()|endif
-    autocmd TabLeave * if exists("t:vimroom_enabled")|call <SID>TeardownVimRoom()|endif
-    autocmd BufWinEnter * call <SID>RestoreLocalVimRoomState()
-    autocmd BufWinLeave * call <SID>ClearLocalVimRoomState()
-    autocmd ColorScheme * call <SID>ResetVimRoomState()
-augroup END
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin Code
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -65,30 +53,6 @@ endfunction
 
 function! s:is_screen_tall_enough()
     return winheight(0) >= (2 * g:vimroom_sidebar_height + 1)
-endfunction
-
-
-function! s:RestoreLocalVimRoomState()
-    if exists("t:vimroom_enabled")
-        call s:SetLocalOptions()
-        call s:SetNavigationMappings()
-    endif
-endfunction
-
-
-function! s:ClearLocalVimRoomState()
-    if exists("t:vimroom_enabled")
-        call s:ClearNavigationMappings()
-        call s:ClearLocalOptions()
-    endif
-endfunction
-
-
-function! s:ResetVimRoomState()
-    if exists("t:vimroom_enabled")
-        call s:VimroomToggle()
-        call s:VimroomToggle()
-    endif
 endfunction
 
 
@@ -127,6 +91,30 @@ function! s:TeardownVimRoom()
     call s:ClearLocalOptions()
     if exists(":AirlineToggle")
         silent AirlineToggle
+    endif
+endfunction
+
+
+function! s:RestoreLocalVimRoomState()
+    if exists("t:vimroom_enabled")
+        call s:SetLocalOptions()
+        call s:SetNavigationMappings()
+    endif
+endfunction
+
+
+function! s:ClearLocalVimRoomState()
+    if exists("t:vimroom_enabled")
+        call s:ClearNavigationMappings()
+        call s:ClearLocalOptions()
+    endif
+endfunction
+
+
+function! s:ResetVimRoomState()
+    if exists("t:vimroom_enabled")
+        call s:VimroomToggle()
+        call s:VimroomToggle()
     endif
 endfunction
 
@@ -288,6 +276,18 @@ function! s:ClearLocalOptions()
     silent! let &l:number = b:vimroom_save_l_number
     silent! let &l:relativenumber = b:vimroom_save_l_relativenumber
 endfunction
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Autocommands
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+augroup vimroom
+    autocmd!
+    autocmd TabEnter * if exists("t:vimroom_enabled")|call <SID>SetupVimRoom()|endif
+    autocmd TabLeave * if exists("t:vimroom_enabled")|call <SID>TeardownVimRoom()|endif
+    autocmd BufWinEnter * call <SID>RestoreLocalVimRoomState()
+    autocmd BufWinLeave * call <SID>ClearLocalVimRoomState()
+    autocmd ColorScheme * call <SID>ResetVimRoomState()
+augroup END
 
 noremap <silent> <Plug>VimroomToggle    :call <SID>VimroomToggle()<CR>
 
