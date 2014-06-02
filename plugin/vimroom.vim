@@ -43,6 +43,18 @@ if !exists( "g:vimroom_clear_line_numbers" )
 endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Autocommands
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+augroup vimroom
+    autocmd!
+    autocmd TabEnter * if exists("t:vimroom_enabled")|call <SID>SetupVimRoom()|endif
+    autocmd TabLeave * if exists("t:vimroom_enabled")|call <SID>TeardownVimRoom()|endif
+    autocmd BufWinEnter * call <SID>RestoreLocalVimRoomState()
+    autocmd BufWinLeave * call <SID>ClearLocalVimRoomState()
+    autocmd ColorScheme * call <SID>ResetVimRoomState()
+augroup END
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin Code
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -50,46 +62,82 @@ function! s:is_screen_wide_enough()
     return winwidth(0) >= g:vimroom_width + ( g:vimroom_min_sidebar_width * 2 )
 endfunction
 
+
 function! s:is_screen_tall_enough()
     return winheight(0) >= (2 * g:vimroom_sidebar_height + 1)
 endfunction
 
-function! <SID>VimroomToggle()
-    if !exists("b:vimroom_enabled")
+
+function! s:RestoreLocalVimRoomState()
+    if exists("t:vimroom_enabled")
+        call s:SetLocalOptions()
+        call s:SetNavigationMappings()
+    endif
+endfunction
+
+
+function! s:ClearLocalVimRoomState()
+    if exists("t:vimroom_enabled")
+        call s:ResetNavigationMappings()
+        call s:ResetLocalOptions()
+    endif
+endfunction
+
+
+function! s:ResetVimRoomState()
+    if exists("t:vimroom_enabled")
+        call s:VimroomToggle()
+        call s:VimroomToggle()
+    endif
+endfunction
+
+
+function! s:VimroomToggle()
+    if !exists("t:vimroom_enabled")
         if s:is_screen_wide_enough() && s:is_screen_tall_enough()
-            let b:vimroom_enabled = 1
-            if exists(":AirlineToggle")
-                silent! AirlineToggle
-            endif
-            call s:SetLocalOptions()
-            call s:SetGlobalOptions()
-            call s:SetNavigationMappings()
-            call s:SetVimRoomBackground()
-            call s:CenterScreen()
+            let t:vimroom_enabled = 1
+            call s:SetupVimRoom()
         else
             echoerr "VimRoom - Screen is too small."
         endif
     else
-        unlet b:vimroom_enabled
-        only
-        call s:ResetHighlighting()
-        call s:ResetNavigationMappings()
-        call s:ResetGlobalOptions()
-        call s:ResetLocalOptions()
-        if exists(":AirlineToggle")
-            silent AirlineToggle
-        endif
+        unlet t:vimroom_enabled
+        call s:TeardownVimRoom()
+    endif
+endfunction
+
+
+function! s:SetupVimRoom()
+    if exists(":AirlineToggle")
+        silent! AirlineToggle
+    endif
+    call s:SetLocalOptions()
+    call s:SetGlobalOptions()
+    call s:SetNavigationMappings()
+    call s:SetVimRoomBackground()
+    call s:CenterScreen()
+endfunction
+
+
+function! s:TeardownVimRoom()
+    only
+    call s:ResetHighlighting()
+    call s:ResetNavigationMappings()
+    call s:ResetGlobalOptions()
+    call s:ResetLocalOptions()
+    if exists(":AirlineToggle")
+        silent AirlineToggle
     endif
 endfunction
 
 
 function! s:SetLocalOptions()
-    silent! let s:save_l_statusline = &l:statusline
-    silent! let s:save_l_wrap = &l:wrap
-    silent! let s:save_l_linebreak = &l:linebreak
-    silent! let s:save_l_textwidth = &l:textwidth
-    silent! let s:save_l_number = &l:number
-    silent! let s:save_l_relativenumber = &l:relativenumber
+    silent! let b:vimroom_save_l_statusline = &l:statusline
+    silent! let b:vimroom_save_l_wrap = &l:wrap
+    silent! let b:vimroom_save_l_linebreak = &l:linebreak
+    silent! let b:vimroom_save_l_textwidth = &l:textwidth
+    silent! let b:vimroom_save_l_number = &l:number
+    silent! let b:vimroom_save_l_relativenumber = &l:relativenumber
 
     silent! setlocal statusline=\ 
     silent! setlocal wrap
@@ -232,13 +280,13 @@ endfunction
 
 
 function! s:ResetLocalOptions()
-    silent! let &l:statusline = s:save_l_statusline
-    silent! let &l:wrap = s:save_l_wrap
-    silent! let &l:linebreak = s:save_l_linebreak
-    silent! let &l:textwidth = s:save_l_textwidth
-    silent! let &l:textwidth = s:save_l_textwidth
-    silent! let &l:number = s:save_l_number
-    silent! let &l:relativenumber = s:save_l_relativenumber
+    silent! let &l:statusline = b:vimroom_save_l_statusline
+    silent! let &l:wrap = b:vimroom_save_l_wrap
+    silent! let &l:linebreak = b:vimroom_save_l_linebreak
+    silent! let &l:textwidth = b:vimroom_save_l_textwidth
+    silent! let &l:textwidth = b:vimroom_save_l_textwidth
+    silent! let &l:number = b:vimroom_save_l_number
+    silent! let &l:relativenumber = b:vimroom_save_l_relativenumber
 endfunction
 
 noremap <silent> <Plug>VimroomToggle    :call <SID>VimroomToggle()<CR>
