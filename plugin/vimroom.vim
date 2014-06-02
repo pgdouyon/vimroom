@@ -78,8 +78,8 @@ endfunction
 
 function! s:ClearLocalVimRoomState()
     if exists("t:vimroom_enabled")
-        call s:ResetNavigationMappings()
-        call s:ResetLocalOptions()
+        call s:ClearNavigationMappings()
+        call s:ClearLocalOptions()
     endif
 endfunction
 
@@ -121,10 +121,10 @@ endfunction
 
 function! s:TeardownVimRoom()
     only
-    call s:ResetHighlighting()
-    call s:ResetNavigationMappings()
-    call s:ResetGlobalOptions()
-    call s:ResetLocalOptions()
+    call s:ClearHighlighting()
+    call s:ClearNavigationMappings()
+    call s:ClearGlobalOptions()
+    call s:ClearLocalOptions()
     if exists(":AirlineToggle")
         silent AirlineToggle
     endif
@@ -249,7 +249,7 @@ function! s:OpenSidebar(direction)
 endfunction
 
 
-function! s:ResetHighlighting()
+function! s:ClearHighlighting()
     execute "silent highlight VertSplit " . s:save_vertsplit
     execute "silent highlight NonText " . s:save_nontext
     execute "silent highlight StatusLine " . s:save_statusline
@@ -258,7 +258,7 @@ function! s:ResetHighlighting()
 endfunction
 
 
-function! s:ResetNavigationMappings()
+function! s:ClearNavigationMappings()
     silent! unmap <buffer> j
     silent! unmap <buffer> k
     silent! unmap <buffer> <Up>
@@ -268,7 +268,7 @@ function! s:ResetNavigationMappings()
 endfunction
 
 
-function! s:ResetGlobalOptions()
+function! s:ClearGlobalOptions()
     silent! let &t_mr = s:save_t_mr
     silent! let &fillchars = s:save_fillchars
     silent! let &laststatus = s:save_laststatus
@@ -279,7 +279,7 @@ function! s:ResetGlobalOptions()
 endfunction
 
 
-function! s:ResetLocalOptions()
+function! s:ClearLocalOptions()
     silent! let &l:statusline = b:vimroom_save_l_statusline
     silent! let &l:wrap = b:vimroom_save_l_wrap
     silent! let &l:linebreak = b:vimroom_save_l_linebreak
