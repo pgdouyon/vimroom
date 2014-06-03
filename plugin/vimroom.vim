@@ -95,30 +95,6 @@ function! s:TeardownVimRoom()
 endfunction
 
 
-function! s:RestoreLocalVimRoomState()
-    if exists("t:vimroom_enabled")
-        call s:SetLocalOptions()
-        call s:SetNavigationMappings()
-    endif
-endfunction
-
-
-function! s:ClearLocalVimRoomState()
-    if exists("t:vimroom_enabled")
-        call s:ClearNavigationMappings()
-        call s:ClearLocalOptions()
-    endif
-endfunction
-
-
-function! s:ResetVimRoomState()
-    if exists("t:vimroom_enabled")
-        call s:VimroomToggle()
-        call s:VimroomToggle()
-    endif
-endfunction
-
-
 function! s:SetLocalOptions()
     silent! let b:vimroom_save_l_statusline = &l:statusline
     silent! let b:vimroom_save_l_wrap = &l:wrap
@@ -277,6 +253,30 @@ function! s:ClearLocalOptions()
     silent! let &l:textwidth = b:vimroom_save_l_textwidth
     silent! let &l:number = b:vimroom_save_l_number
     silent! let &l:relativenumber = b:vimroom_save_l_relativenumber
+endfunction
+
+
+function! s:RestoreLocalVimRoomState()
+    if exists("t:vimroom_enabled")
+        call s:SetLocalOptions()
+        call s:SetNavigationMappings()
+    endif
+endfunction
+
+
+function! s:ClearLocalVimRoomState()
+    if exists("t:vimroom_enabled")
+        call s:ClearNavigationMappings()
+        call s:ClearLocalOptions()
+    endif
+endfunction
+
+
+function! s:ResetVimRoomState()
+    if exists("t:vimroom_enabled")
+        call s:VimroomToggle()
+        call s:VimroomToggle()
+    endif
 endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
