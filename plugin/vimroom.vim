@@ -85,7 +85,7 @@ endfunction
 
 function! s:TeardownVimRoom()
     only
-    call s:ClearHighlighting()
+    call s:ClearVimRoomBackground()
     call s:ClearNavigationMappings()
     call s:ClearGlobalOptions()
     call s:ClearLocalOptions()
@@ -213,7 +213,7 @@ function! s:OpenSidebar(direction)
 endfunction
 
 
-function! s:ClearHighlighting()
+function! s:ClearVimRoomBackground()
     execute "silent highlight VertSplit " . s:save_vertsplit
     execute "silent highlight NonText " . s:save_nontext
     execute "silent highlight StatusLine " . s:save_statusline
