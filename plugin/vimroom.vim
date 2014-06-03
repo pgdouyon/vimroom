@@ -247,12 +247,14 @@ endfunction
 
 
 function! s:ClearNavigationMappings()
-    silent! unmap <buffer> j
-    silent! unmap <buffer> k
-    silent! unmap <buffer> <Up>
-    silent! unmap <buffer> <Down>
-    silent! iunmap <buffer> <Up>
-    silent! iunmap <buffer> <Down>
+    if g:vimroom_navigation_keys
+        silent! unmap <buffer> j
+        silent! unmap <buffer> k
+        silent! unmap <buffer> <Up>
+        silent! unmap <buffer> <Down>
+        silent! iunmap <buffer> <Up>
+        silent! iunmap <buffer> <Down>
+    endif
 endfunction
 
 
