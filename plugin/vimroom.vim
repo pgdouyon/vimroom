@@ -286,8 +286,8 @@ augroup vimroom
     autocmd!
     autocmd TabEnter * if exists("t:vimroom_enabled")|call <SID>SetupVimRoom()|endif
     autocmd TabLeave * if exists("t:vimroom_enabled")|call <SID>TeardownVimRoom()|endif
-    autocmd BufWinEnter * call <SID>RestoreLocalVimRoomState()
-    autocmd BufWinLeave * call <SID>ClearLocalVimRoomState()
+    autocmd BufEnter * call <SID>RestoreLocalVimRoomState()
+    autocmd BufLeave * call <SID>ClearLocalVimRoomState()
     autocmd ColorScheme * call <SID>ResetVimRoomState()
 augroup END
 
