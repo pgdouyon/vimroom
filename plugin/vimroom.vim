@@ -75,8 +75,7 @@ function! s:SetupVimRoom()
     if exists(":AirlineToggle")
         silent! AirlineToggle
     endif
-    call s:SetLocalOptions()
-    call s:SetGlobalOptions()
+    call s:SetVimRoomOptions()
     call s:SetNavigationMappings()
     call s:SetVimRoomBackground()
     call s:CenterScreen()
@@ -87,44 +86,31 @@ function! s:TeardownVimRoom()
     only
     call s:ClearVimRoomBackground()
     call s:ClearNavigationMappings()
-    call s:ClearGlobalOptions()
-    call s:ClearLocalOptions()
+    call s:ClearVimRoomOptions()
     if exists(":AirlineToggle")
         silent AirlineToggle
     endif
 endfunction
 
 
-function! s:SetLocalOptions()
-    silent! let b:vimroom_save_l_statusline = &l:statusline
-    silent! let b:vimroom_save_l_wrap = &l:wrap
-    silent! let b:vimroom_save_l_linebreak = &l:linebreak
-    silent! let b:vimroom_save_l_textwidth = &l:textwidth
-    silent! let b:vimroom_save_l_number = &l:number
-    silent! let b:vimroom_save_l_relativenumber = &l:relativenumber
-
-    silent! setlocal statusline=\ 
-    silent! setlocal wrap
-    silent! setlocal linebreak
-    execute "silent! setlocal textwidth=" . g:vimroom_width
-    if g:vimroom_clear_line_numbers
-        silent! setlocal nonumber
-        silent! setlocal norelativenumber
-    endif
-endfunction
-
-
-function! s:SetGlobalOptions()
+function! s:SetVimRoomOptions()
     silent! let s:save_t_mr = &t_mr
     silent! let s:save_fillchars = &fillchars
+    silent! let s:save_statusline = &statusline
     silent! let s:save_laststatus = &laststatus
+    silent! let s:save_scrolloff = &scrolloff
     silent! let s:save_guioptions = &guioptions
     silent! let s:save_guitablabel = &guitablabel
     silent! let s:save_tabline = &tabline
-    silent! let s:save_scrolloff = &scrolloff
+    silent! let s:save_wrap = &wrap
+    silent! let s:save_linebreak = &linebreak
+    silent! let s:save_textwidth = &textwidth
+    silent! let s:save_number = &number
+    silent! let s:save_relativenumber = &relativenumber
 
     silent! set t_mr
     silent! set fillchars+=vert:\ 
+    silent! set statusline=\ 
     silent! set laststatus=0
     silent! set guioptions-=r
     silent! set guioptions-=R
@@ -132,7 +118,14 @@ function! s:SetGlobalOptions()
     silent! set guioptions-=L
     silent! set guitablabel-=e
     silent! set tabline=\ 
+    silent! set wrap
+    silent! set linebreak
+    execute "silent! set textwidth=" . g:vimroom_width
     execute "silent! set scrolloff=" . g:vimroom_scrolloff
+    if g:vimroom_clear_line_numbers
+        silent! set nonumber
+        silent! set norelativenumber
+    endif
 endfunction
 
 
@@ -234,31 +227,27 @@ function! s:ClearNavigationMappings()
 endfunction
 
 
-function! s:ClearGlobalOptions()
+function! s:ClearVimRoomOptions()
     silent! let &t_mr = s:save_t_mr
     silent! let &fillchars = s:save_fillchars
+    silent! let &statusline = s:save_statusline
     silent! let &laststatus = s:save_laststatus
+    silent! let &scrolloff = s:save_scrolloff
     silent! let &guioptions = s:save_guioptions
     silent! let &guitablabel = s:save_guitablabel
     silent! let &tabline = s:save_tabline
-    silent! let &scrolloff = s:save_scrolloff
-endfunction
-
-
-function! s:ClearLocalOptions()
-    silent! let &l:statusline = b:vimroom_save_l_statusline
-    silent! let &l:wrap = b:vimroom_save_l_wrap
-    silent! let &l:linebreak = b:vimroom_save_l_linebreak
-    silent! let &l:textwidth = b:vimroom_save_l_textwidth
-    silent! let &l:textwidth = b:vimroom_save_l_textwidth
-    silent! let &l:number = b:vimroom_save_l_number
-    silent! let &l:relativenumber = b:vimroom_save_l_relativenumber
+    silent! let &wrap = s:save_wrap
+    silent! let &linebreak = s:save_linebreak
+    silent! let &textwidth = s:save_textwidth
+    if g:vimroom_clear_line_numbers
+        silent! let &number = s:save_number
+        silent! let &relativenumber = s:save_relativenumber
+    endif
 endfunction
 
 
 function! s:RestoreLocalVimRoomState()
     if exists("t:vimroom_enabled")
-        call s:SetLocalOptions()
         call s:SetNavigationMappings()
     endif
 endfunction
@@ -267,7 +256,6 @@ endfunction
 function! s:ClearLocalVimRoomState()
     if exists("t:vimroom_enabled")
         call s:ClearNavigationMappings()
-        call s:ClearLocalOptions()
     endif
 endfunction
 
