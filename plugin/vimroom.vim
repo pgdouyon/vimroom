@@ -102,11 +102,12 @@ function! s:SetVimRoomOptions()
     silent! let s:save_guioptions = &guioptions
     silent! let s:save_guitablabel = &guitablabel
     silent! let s:save_tabline = &tabline
-    silent! let s:save_wrap = &wrap
-    silent! let s:save_linebreak = &linebreak
-    silent! let s:save_textwidth = &textwidth
-    silent! let s:save_number = &number
-    silent! let s:save_relativenumber = &relativenumber
+
+    silent! let w:vimroom_save_wrap = &wrap
+    silent! let w:vimroom_save_linebreak = &linebreak
+    silent! let b:vimroom_save_textwidth = &textwidth
+    silent! let w:vimroom_save_number = &number
+    silent! let w:vimroom_save_relativenumber = &relativenumber
 
     silent! set t_mr
     silent! set fillchars+=vert:\ 
@@ -236,12 +237,13 @@ function! s:ClearVimRoomOptions()
     silent! let &guioptions = s:save_guioptions
     silent! let &guitablabel = s:save_guitablabel
     silent! let &tabline = s:save_tabline
-    silent! let &wrap = s:save_wrap
-    silent! let &linebreak = s:save_linebreak
-    silent! let &textwidth = s:save_textwidth
+
+    silent! let &wrap = w:vimroom_save_wrap
+    silent! let &linebreak = w:vimroom_save_linebreak
+    silent! let &textwidth = b:vimroom_save_textwidth
     if g:vimroom_clear_line_numbers
-        silent! let &number = s:save_number
-        silent! let &relativenumber = s:save_relativenumber
+        silent! let &number = w:vimroom_save_number
+        silent! let &relativenumber = w:vimroom_save_relativenumber
     endif
 endfunction
 
