@@ -250,6 +250,8 @@ endfunction
 
 function! s:RestoreLocalVimRoomState()
     if exists("t:vimroom_enabled")
+        silent! let b:vimroom_save_textwidth = &textwidth
+        execute "silent! set textwidth=" . g:vimroom_width
         call s:SetNavigationMappings()
     endif
 endfunction
@@ -257,6 +259,7 @@ endfunction
 
 function! s:ClearLocalVimRoomState()
     if exists("t:vimroom_enabled")
+        silent! let &textwidth = b:vimroom_save_textwidth
         call s:ClearNavigationMappings()
     endif
 endfunction
