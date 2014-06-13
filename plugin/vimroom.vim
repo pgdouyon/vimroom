@@ -269,6 +269,15 @@ function! s:ResetVimRoomState()
     endif
 endfunction
 
+function! s:QuitVimRoomBuffer()
+    if exists("t:vimroom_enabled")
+        let tabpage = tabpagenr()
+        if tabpagewinnr(tabpage, "$") == 5
+            only
+        endif
+    endif
+endfunction
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Autocommands
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -279,6 +288,7 @@ augroup vimroom
     autocmd BufEnter * call <SID>RestoreLocalVimRoomState()
     autocmd BufLeave * call <SID>ClearLocalVimRoomState()
     autocmd ColorScheme * call <SID>ResetVimRoomState()
+    autocmd QuitPre * call <SID>QuitVimRoomBuffer()
 augroup END
 
 noremap <silent> <Plug>VimroomToggle    :call <SID>VimroomToggle()<CR>
