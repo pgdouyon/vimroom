@@ -103,6 +103,7 @@ function! s:SetVimRoomOptions()
     silent! let s:save_guitablabel = &guitablabel
     silent! let s:save_tabline = &tabline
 
+    silent! let w:vimroom_save_foldcolumn = &foldcolumn
     silent! let w:vimroom_save_wrap = &wrap
     silent! let w:vimroom_save_linebreak = &linebreak
     silent! let b:vimroom_save_textwidth = &textwidth
@@ -119,6 +120,7 @@ function! s:SetVimRoomOptions()
     silent! set guioptions-=L
     silent! set guitablabel-=e
     silent! set tabline=\ 
+    silent! set foldcolumn=0
     silent! set wrap
     silent! set linebreak
     execute "silent! set textwidth=" . g:vimroom_width
@@ -148,6 +150,7 @@ function! s:SetVimRoomBackground()
     let s:save_statusline = s:GetHighlighting("StatusLine")
     let s:save_statuslinenc = s:GetHighlighting("StatusLineNC")
     let s:save_signcolumn = s:GetHighlighting("SignColumn")
+    let s:save_colorcolumn = s:GetHighlighting("ColorColumn")
 
     if has('gui_running')
         let hi_color = "guifg=bg guibg=bg"
@@ -159,6 +162,7 @@ function! s:SetVimRoomBackground()
     silent execute "highlight StatusLine " . hi_color
     silent execute "highlight StatusLineNC " . hi_color
     silent execute "highlight SignColumn " . hi_color
+    silent execute "highlight ColorColumn " . hi_color
 endfunction
 
 
@@ -202,6 +206,7 @@ function! s:OpenSidebar(direction)
     silent! setlocal bufhidden=wipe
     silent! setlocal buftype=nofile
     silent! setlocal statusline=\ 
+    silent! setlocal foldcolumn=0
     autocmd BufEnter <buffer> wincmd p
     wincmd p
 endfunction
@@ -213,6 +218,7 @@ function! s:ClearVimRoomBackground()
     execute "silent highlight StatusLine " . s:save_statusline
     execute "silent highlight StatusLineNC " . s:save_statuslinenc
     execute "silent highlight SignColumn " . s:save_signcolumn
+    execute "silent highlight ColorColumn " . s:save_colorcolumn
 endfunction
 
 
@@ -238,6 +244,7 @@ function! s:ClearVimRoomOptions()
     silent! let &guitablabel = s:save_guitablabel
     silent! let &tabline = s:save_tabline
 
+    silent! let &foldcolumn = w:vimroom_save_foldcolumn
     silent! let &wrap = w:vimroom_save_wrap
     silent! let &linebreak = w:vimroom_save_linebreak
     silent! let &textwidth = b:vimroom_save_textwidth
