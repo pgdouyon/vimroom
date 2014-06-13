@@ -304,7 +304,3 @@ augroup END
 noremap <silent> <Plug>VimroomToggle    :call <SID>VimroomToggle()<CR>
 
 command -nargs=0 VimroomToggle call <SID>VimroomToggle()
-
-if !hasmapto( '<Plug>VimroomToggle' )
-    nmap <silent> <Leader>V <Plug>VimroomToggle
-endif
