@@ -167,14 +167,12 @@ endfunction
 
 
 function! s:GetHighlighting(hlgroup)
-    let oldz = @z
-    redir @z
+    redir => hl
     silent execute "highlight " . a:hlgroup
     redir END
 
-    let strip_new_lines = substitute(@z, '\n', '', 'g')
+    let strip_new_lines = substitute(hl, '\n', '', 'g')
     let highlighting = substitute(strip_new_lines, a:hlgroup . '\v\s*xxx\s*', '', '')
-    let @z = oldz
     return highlighting
 endfunction
 
