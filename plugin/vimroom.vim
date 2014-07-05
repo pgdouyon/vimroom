@@ -194,7 +194,7 @@ endfunction
 
 
 function! s:OpenSidebar(direction)
-    new
+    keepalt new
     execute "wincmd " . toupper(a:direction)
     silent! setlocal nomodifiable
     silent! setlocal nocursorline
